@@ -7,11 +7,11 @@ This sample demonstrate **simple** and **clean** way of android project architec
 
 ### FAQ
 
-> Why not to put all the code inside Activity?
+**Why not to put all the code inside Activity?**
 
 Because you never know how big it can grow.
 
-> Why not to use MV*whatever pattern?
+**Why not to use MV*whatever pattern?**
 
 Because it comes with `InterfaceStackoverflowException`. Number of interfaces and abstraction is huge, for most of android projects *(where we are not event writing tests)* this is [overengineering](https://en.wikipedia.org/wiki/Overengineering), just admit this.
 
