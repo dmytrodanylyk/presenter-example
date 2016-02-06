@@ -28,8 +28,14 @@ public class FeedActivity extends AppCompatActivity {
         initToolBar();
         initView();
 
-        mPresenter = new FeedPresenter(this);
-        mPresenter.initPresenter();
+        mPresenter = new FeedPresenter();
+        mPresenter.onAttachActivity(savedInstanceState, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.onDetachActivity();
+        super.onDestroy();
     }
 
     @Override

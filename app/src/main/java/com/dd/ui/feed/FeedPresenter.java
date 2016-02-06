@@ -1,8 +1,8 @@
 package com.dd.ui.feed;
 
-import android.os.Handler;
+import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 import com.dd.data.FeedItem;
 
 import java.util.ArrayList;
@@ -13,25 +13,28 @@ public class FeedPresenter {
 
     private FeedActivity mActivity;
 
-    public FeedPresenter(FeedActivity activity) {
-        mActivity = activity;
+    public FeedPresenter() {
     }
 
-    public void initPresenter() {
-        loadData(0);
+    public void onAttachActivity(@NonNull Bundle savedInstanceState, @NonNull FeedActivity activity) {
+        mActivity = activity;
+        loadData();
+    }
+
+    public void onDetachActivity() {
+        mActivity = null;
     }
 
     public void onToolbarSettingsClicked() {
-        Toast.makeText(mActivity, "Presenter#onToolbarSettingsClicked", Toast.LENGTH_SHORT).show();
+        // handle click
     }
 
     public void onToolbarHelpClicked() {
-        Toast.makeText(mActivity, "Presenter#onToolbarHelpClicked", Toast.LENGTH_SHORT).show();
+        // handle click
     }
 
     public void onFeedItemClicked(@NonNull FeedItem feedItem) {
-        Toast.makeText(mActivity, String.format("Presenter#onFeedItemClicked %s",
-                feedItem.getTitle()), Toast.LENGTH_SHORT).show();
+        // handle click
     }
 
     public void onToolbarBackClicked() {
@@ -39,18 +42,30 @@ public class FeedPresenter {
     }
 
     public void onPullToRefresh() {
-        loadData(TimeUnit.SECONDS.toMillis(2));
+        loadData();
     }
 
-    private void loadData(long delayMillis) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+    private void loadData() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                mActivity.setFeedItemList(generateDummyData());
-                mActivity.hidePullToRefreshIndicator();
+                SystemClock.sleep(TimeUnit.SECONDS.toMillis(5));
+                List<FeedItem> feedItemList = generateDummyData();
+                updateUI(feedItemList);
             }
-        }, delayMillis);
+        }).start();
+    }
+
+    private void updateUI(@NonNull final List<FeedItem> feedItemList) {
+        if (mActivity != null) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mActivity.setFeedItemList(feedItemList);
+                    mActivity.hidePullToRefreshIndicator();
+                }
+            });
+        }
     }
 
     @NonNull
