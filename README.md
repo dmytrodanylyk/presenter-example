@@ -31,8 +31,8 @@ public class FeedActivity extends AppCompatActivity {
         initToolBar();
         initView();
 
-        mPresenter = new FeedPresenter(this);
-        mPresenter.initPresenter();
+        mPresenter = new FeedPresenter();
+        mPresenter.onAttachActivity(savedInstanceState, this);
     }
     
     @Override
@@ -61,20 +61,21 @@ public class FeedPresenter {
 
     private FeedActivity mActivity;
 
-    public FeedPresenter(FeedActivity activity) {
+    public void onAttachActivity(Bundle savedInstanceState, FeedActivity activity) {
         mActivity = activity;
+        loadData();
     }
 
-    public void initPresenter() {
-        // omitted
+    public void onDetachActivity() {
+        mActivity = null;
     }
 
     public void onToolbarSettingsClicked() {
-        Toast.makeText(mActivity, "Presenter#onToolbarSettingsClicked", Toast.LENGTH_SHORT).show();
+        // handle click
     }
 
     public void onToolbarHelpClicked() {
-        Toast.makeText(mActivity, "Presenter#onToolbarHelpClicked", Toast.LENGTH_SHORT).show();
+        // handle click
     }
 
     public void onToolbarBackClicked() {
